@@ -1,0 +1,55 @@
+
+--- FILE: C:\projects\nodeAPI\index.js ---
+// index.js
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const supabaseRoutes = require('./routes/supabase.routes');
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use('/api/supabase', supabaseRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+--- FILE: C:\projects\nodeAPI\controllers\supabase.controller.js ---
+const supabase = require('../services/supabaseClient');
+
+exports.getProducts = async (req, res) => {
+  try {
+    console.log("GET /products hit");
+    const { data, error } = await supabase.from('printed_products').select('*');
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    console.error("Supabase error:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+--- FILE: C:\projects\nodeAPI\routes\supabase.routes.js ---
+const express = require('express');
+const router = express.Router();
+const { getProducts } = require('../controllers/supabase.controller');
+
+router.get('/products', getProducts);
+
+module.exports = router;
+
+
+--- FILE: C:\projects\nodeAPI\services\supabaseClient.js ---
+// services/supabaseClient.js
+const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config();
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
+
+module.exports = supabase;
+
