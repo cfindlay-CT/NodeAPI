@@ -7,13 +7,15 @@ function mapToPrintedProduct(product) {
   return new PrintedProduct({
     id: product.productid,
     name: product.name,
-    description: product.description,
+    longDescription: product.longDescription,
+    shortDescription: product.shortDescription,
     price: product.price,
     printType: product.printtype,
     estPrintTime: product.estimatedprinttime,
     sku: product.sku,
     categoryId: product.categoryid,
-    materialId: product.materialid
+    materialId: product.materialid,
+    size: product.size,
   });
 }
 
